@@ -1,7 +1,8 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, text } from "express";
 import cors from "cors";
 import { CohereClient } from "cohere-ai";
 import dotenv from "dotenv";
+import { getPrompt } from "./prompts/prompt";
 
 dotenv.config();
 const app = express();
@@ -15,9 +16,11 @@ const cohere = new CohereClient({
 
 app.post("/query", async (req: Request, res: Response) => {
   try {
-    console.log(req.body);
+    const prompt = getPrompt();
+
     const stream = await cohere.chatStream({
-      message: req.body.message,
+      message: `Answer the following query by taking context from documents only and summarise and reply according to you  \n\n query ${req.body.message}`,
+      documents: [{ title: "Proffesional History of ayush", text: prompt }],
     });
 
     res.writeHead(200, {
