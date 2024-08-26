@@ -14,6 +14,10 @@ const cohere = new CohereClient({
   token: process.env.COHERE_TOKEN,
 });
 
+app.get("/", (req, res) => {
+  res.send("Server is Running");
+});
+
 app.post("/query", async (req: Request, res: Response) => {
   try {
     const prompt = getPrompt();
